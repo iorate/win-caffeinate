@@ -1,0 +1,3 @@
+[submodule "nonsugar"]
+	path = nonsugar
+	url = https://github.com/iorate/nonsugar.git
