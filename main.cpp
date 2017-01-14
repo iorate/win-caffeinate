@@ -10,10 +10,8 @@
 #define _WIN32_WINNT 0x0601
 
 #include <algorithm>
-#include <exception>
 #include <iostream>
 #include <regex>
-#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
@@ -29,6 +27,7 @@ struct scope_exit
     {
         struct impl
         {
+            impl(impl &&) = default;
             ~impl() { m_f(); }
             F m_f;
         };
@@ -92,16 +91,16 @@ try {
         util.back() = '\0';
         STARTUPINFO si = { sizeof(STARTUPINFO) };
         PROCESS_INFORMATION pi;
-        auto const ret = CreateProcess(
+        auto const cp = CreateProcess(
             nullptr, &util[0], nullptr, nullptr, 0, 0, nullptr, nullptr, &si, &pi);
-        if (ret == 0) {
+        if (cp == 0) {
             // Get the last error.
             char *buf;
-            auto const ret = FormatMessage(
+            auto const fm = FormatMessage(
                 FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, nullptr,
                 GetLastError(), MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US),
                 reinterpret_cast<char *>(&buf), 0, nullptr);
-            if (ret == 0) throw 0;
+            if (fm == 0) throw 0;
             SCOPE_EXIT { LocalFree(buf); };
             std::cerr << "caffeinate: " << buf;
             return 0;
@@ -114,10 +113,11 @@ try {
         return 0;
     }
 
-    auto const timeout = opts.has<'t'>() ? std::max(opts.get<'t'>(), 0) * 1000 : INFINITE;
+    auto const timeout = opts.has<'t'>() ?
+        static_cast<DWORD>((std::max)(opts.get<'t'>(), 0)) * 1000 : INFINITE;
     if (opts.has<'w'>()) {
         // Open the process.
-        auto const process = OpenProcess(SYNCHRONIZE, 0, opts.get<'w'>());
+        auto const process = OpenProcess(SYNCHRONIZE, 0, static_cast<DWORD>(opts.get<'w'>()));
         if (process == nullptr) return 0;
         SCOPE_EXIT { CloseHandle(process); };
 

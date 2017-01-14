@@ -1,7 +1,7 @@
 # win-caffeinate
 A port of `caffeinate` command of macOS to Windows. It can prevent the display and system from idle sleeping.
 
-# Example
+## Example
 ```shell
 $ caffeinate make
 ```
@@ -11,10 +11,10 @@ $ caffeinate -dit3600
 ```
 `caffeinate` prevents the display and system from sleeping for 3600 seconds.
 
-# Requirements
+## Requirements
 To run it, Windows 7 or later is required. To build it, a compiler that supports C++14 is required.
 
-# Usage
+## Usage
 ```shell
 $ caffeinate --help
 Usage: caffeinate [OPTION...] [UTILITY...]

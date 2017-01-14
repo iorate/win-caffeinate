@@ -7,7 +7,7 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 CXX := g++
-CXXFLAGS := -O2 -std=c++14 -Wall -Wextra -Wno-missing-field-initializers -pedantic-errors -I nonsugar
+CXXFLAGS := -O2 -std=c++14 -Wall -Wextra -Wno-missing-field-initializers -pedantic-errors -Inonsugar
 PROGRAM := caffeinate.exe
 DESTDIR := ~/.local/bin
 
