@@ -6,6 +6,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// Require Windows 7 or later.
 #define WINVER 0x0601
 #define _WIN32_WINNT 0x0601
 
@@ -15,7 +16,7 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "nonsugar.hpp"
+#include <nonsugar.hpp>
 #include <windows.h>
 
 namespace {
@@ -39,7 +40,7 @@ struct scope_exit
 
 #define PP_CAT_I(i, j) i ## j
 #define PP_CAT(i, j) PP_CAT_I(i, j)
-#define SCOPE_EXIT auto const PP_CAT(scope_exit_, __LINE__) = scope_exit() ^ [&]
+#define SCOPE_EXIT auto const PP_CAT(scope_exit_, __LINE__) = ::scope_exit() ^ [&]
 
 int main(int argc, char **argv)
 try {
@@ -71,12 +72,12 @@ try {
     if (request == INVALID_HANDLE_VALUE) throw 0;
     SCOPE_EXIT { CloseHandle(request); };
 
-    // Prevent the display from sleeping
+    // Prevent the display from sleeping.
     auto const disp = opts.has<'d'>();
     if (disp && PowerSetRequest(request, PowerRequestDisplayRequired) == 0) throw 0;
     SCOPE_EXIT { if (disp) PowerClearRequest(request, PowerRequestDisplayRequired); };
 
-    // Prevent the system from idle sleeping
+    // Prevent the system from idle sleeping.
     auto const sys = !opts.has<'d'>() || opts.has<'i'>();
     if (sys && PowerSetRequest(request, PowerRequestSystemRequired) == 0) throw 0;
     SCOPE_EXIT { if (sys) PowerClearRequest(request, PowerRequestSystemRequired); };
@@ -114,7 +115,8 @@ try {
     }
 
     auto const timeout = opts.has<'t'>() ?
-        static_cast<DWORD>((std::max)(opts.get<'t'>(), 0)) * 1000 : INFINITE;
+        static_cast<DWORD>((std::max)(opts.get<'t'>(), 0)) * 1000 :
+        INFINITE;
     if (opts.has<'w'>()) {
         // Open the process.
         auto const process = OpenProcess(SYNCHRONIZE, 0, static_cast<DWORD>(opts.get<'w'>()));
