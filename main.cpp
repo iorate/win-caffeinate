@@ -1,7 +1,7 @@
 
 // win-caffeinate
 //
-// Copyright iorate 2017.
+// Copyright iorate 2017-2018.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -24,15 +24,20 @@ namespace {
 struct scope_exit
 {
     template <class F>
-    auto operator^(F &&f) const
+    struct impl
     {
-        struct impl
-        {
-            impl(impl &&) = default;
-            ~impl() { m_f(); }
-            F m_f;
-        };
-        return impl { std::move(f) };
+        impl(impl const &) = delete;
+        impl &operator=(impl const &) = delete;
+
+        ~impl() { m_f(); }
+
+        F m_f;
+    };
+
+    template <class F>
+    impl<F> operator^(F &&f) const
+    {
+        return { std::move(f) };
     }
 };
 
@@ -40,7 +45,7 @@ struct scope_exit
 
 #define PP_CAT_I(i, j) i ## j
 #define PP_CAT(i, j) PP_CAT_I(i, j)
-#define SCOPE_EXIT auto const PP_CAT(scope_exit_, __LINE__) = ::scope_exit() ^ [&]
+#define SCOPE_EXIT auto const &PP_CAT(scope_exit_, __LINE__) = ::scope_exit() ^ [&]
 
 int main(int argc, char **argv)
 try {
@@ -60,7 +65,7 @@ try {
         return 0;
     }
     if (opts.has<'v'>()) {
-        std::cout << "caffeinate 0.0\n";
+        std::cout << "caffeinate 0.1\n";
         return 0;
     }
 
