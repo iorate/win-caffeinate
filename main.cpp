@@ -65,7 +65,7 @@ try {
         return 0;
     }
     if (opts.has<'v'>()) {
-        std::cout << "caffeinate 0.1\n";
+        std::cout << "caffeinate 1.1\n";
         return 0;
     }
 
