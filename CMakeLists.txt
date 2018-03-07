@@ -13,7 +13,7 @@ project(win-caffeinate)
 if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
   add_compile_options(/std:c++14 /WX /W4 /wd4189)
 else(CMAKE_CXX_COMPILER_ID MATCHES GNU|Clang)
-	add_compile_options(-std=c++14 -Werror -Wall -Wextra -Wpedantic -Wno-missing-field-initializers -Wno-unused-variable)
+  add_compile_options(-std=c++14 -Werror -Wall -Wextra -Wpedantic -Wno-missing-field-initializers -Wno-unused-variable)
 endif()
 
 include_directories(${PROJECT_SOURCE_DIR}/nonsugar)
