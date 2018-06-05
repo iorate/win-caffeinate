@@ -5,10 +5,13 @@ A port of `caffeinate` command from macOS to Windows. It can prevent the display
 ```
 $ caffeinate make
 ```
+
 `caffeinate` executes `make` and prevents the system from sleeping while `make` is running.
+
 ```
 $ caffeinate -dit3600
 ```
+
 `caffeinate` prevents the display and system from sleeping for 3600 seconds.
 
 ## Requirements
@@ -21,16 +24,17 @@ Usage: caffeinate [OPTION...] [UTILITY...]
   prevent the system from sleeping
 
 Options:
-  -d                     prevent the display from sleeping
-  -i                     prevent the system from idle sleeping (default)
-  -t TIMEOUT             specify the timeout value in seconds
-  -w PID                 wait for the process with the specified pid to exit
-  -h          --help     display this help and exit
-  -v          --version  display the version info and exit
+  -h         --help            display this help and exit
+  -v         --version         display the version info and exit
+  -d         --display         prevent the display from sleeping
+  -i         --system-idle     prevent the system from idle sleeping (default)
+  -t PERIOD  --timeout=PERIOD  specify the timeout value in seconds
+  -w PID     --wait=PID        wait for the process with the specified pid to
+                               exit
 ```
 
 ## Author
-[@iorate](https://twitter.com/iorate)
+[iorate](https://github.com/iorate) ([Twitter](https://twitter.com/iorate))
 
 ## License
-[Boost Software License 1.0](http://www.boost.org/LICENSE_1_0.txt)
+[Boost Software License 1.0](LICENSE_1_0.txt)
