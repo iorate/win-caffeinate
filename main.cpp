@@ -51,13 +51,13 @@ int main(int argc, char **argv)
 try {
     // Parse the command line.
     auto const cmd = nonsugar::command<char>("caffeinate", "prevent the system from sleeping")
-        .flag<'d'>({'d'}, {}, "prevent the display from sleeping")
-        .flag<'i'>({'i'}, {}, "prevent the system from idle sleeping (default)")
-        .flag<'t', int>({'t'}, {}, "TIMEOUT", "specify the timeout value in seconds")
-        .flag<'w', int>({'w'}, {}, "PID", "wait for the process with the specified pid to exit")
-        .flag<'h'>({'h'}, {"help"}, "display this help and exit")
-        .flag<'v'>({'v'}, {"version"}, "display the version info and exit")
-        .argument<'u', std::vector<std::string>>("UTILITY")
+        .flag<'h'>({'h'}, {"help"}, "", "display this help and exit")
+        .flag<'v'>({'v'}, {"version"}, "", "display the version info and exit")
+        .flag<'d'>({'d'}, {"display"}, "", "prevent the display from sleeping")
+        .flag<'i'>({'i'}, {"system-idle"}, "", "prevent the system from idle sleeping (default)")
+        .flag<'t', int>({'t'}, {"timeout"}, "PERIOD", "specify the timeout value in seconds")
+        .flag<'w', int>({'w'}, {"wait"}, "PID", "wait for the process with the specified pid to\nexit")
+        .argument<'U', std::vector<std::string>>("UTILITY")
         ;
     auto const opts = nonsugar::parse(argc, argv, cmd);
     if (opts.has<'h'>()) {
@@ -65,7 +65,7 @@ try {
         return 0;
     }
     if (opts.has<'v'>()) {
-        std::cout << "caffeinate 1.1\n";
+        std::cout << "caffeinate 1.2\n";
         return 0;
     }
 
@@ -87,7 +87,7 @@ try {
     if (sys && PowerSetRequest(request, PowerRequestSystemRequired) == 0) throw 0;
     SCOPE_EXIT { if (sys) PowerClearRequest(request, PowerRequestSystemRequired); };
 
-    auto const args = opts.get<'u'>();
+    auto const args = opts.get<'U'>();
     if (!args.empty()) {
         // Create a process.
         std::string util;
